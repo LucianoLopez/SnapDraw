@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private Paint drawPaint, canvasPaint;
     private int paintColor;
     private Bitmap canvasBitmap;
-
+    String mCurrentPhotoPath;
+    boolean finished = false;
+    View globalView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +51,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onTakePicture(View view) {
-//        Intent myIntent = new Intent(view.getContext(), DrawingActivity.class);
-//        startActivityForResult(myIntent, 0);
-        dispatchTakePictureIntent();
+        globalView = view;
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.luciano1.snapdraw.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//                Intent myIntent = new Intent(view.getContext(), DrawingActivity.class);
+//                startActivity(myIntent);
+            }
+        }
+
 
     }
+    public void startDrawing() {
 
+        Intent myIntent = new Intent(globalView.getContext(), DrawingActivity.class);
+        startActivity(myIntent);
+    }
 
 
 
@@ -87,16 +110,23 @@ public class MainActivity extends AppCompatActivity {
             //set path
 //            Bundle extras = data.getExtras();
 //            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-            Display parent = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            int width = size.x;
-            int height = size.y;
-            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, 100, 50, true);
+             Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+
+//             DrawingView.background = canvasBitmap;
+//            canvasBitmap = imageBitmap;
+//            imageBitmap.getHeight();
+//            imageBitmap.getWidth();
+//            Display parent = getWindowManager().getDefaultDisplay();
+//            Point size = new Point();
+//            int width = size.x;
+//            int height = size.y;
+//            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth(), imageBitmap.getHeight(), true);
             mImageView.setImageBitmap(imageBitmap);
+            startDrawing();
+
         }
     }
-    String mCurrentPhotoPath;
+
 
     private File createImageFile() throws IOException {
         //create an image file name
