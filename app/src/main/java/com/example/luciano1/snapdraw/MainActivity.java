@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     public void startDrawing() {
 
         Intent myIntent = new Intent(globalView.getContext(), DrawingActivity.class);
+        String imagePath = mCurrentPhotoPath;
+        myIntent.putExtra("filePath", imagePath);
         startActivity(myIntent);
     }
 

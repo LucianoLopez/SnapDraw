@@ -25,10 +25,14 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
     private DrawingView drawView;
     private ImageButton currPaint, drawBtn, eraseBtn;
     private float smallBrush, mediumBrush, largeBrush;
+    String imagePath;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
+        //TRYING TO GET INTENT
+        Intent intent = getIntent();
+        imagePath = intent.getStringExtra("filePath");
         drawView = (DrawingView)findViewById(R.id.drawing);
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
         currPaint = (ImageButton) paintLayout.getChildAt(0);
@@ -41,6 +45,8 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
         drawView.setBrushSize(mediumBrush);
         eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
         eraseBtn.setOnClickListener(this);
+        drawView.setCanvas(imagePath);
+        drawView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
 
 
     }

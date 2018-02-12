@@ -6,12 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -27,19 +29,34 @@ public class DrawingView extends View {
     private int paintColor = 0xFF660000;
     private Canvas drawCanvas;
     private Bitmap canvasBitmap;
+    private Bitmap canvasBitmapCopy;
     private float brushSize, lastBrushSize;
     private boolean erase = false;
-    public static String background;
+    int width;
+    int height;
+    String imagePath;
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupDrawing();
     }
 
+    public void setCanvas(String imagePath) {
+        Bitmap new1 = BitmapFactory.decodeFile(imagePath);
+        Bitmap resized = Bitmap.createScaledBitmap(new1, 1054, 1469, true);
+        this.imagePath = imagePath;
+//        drawCanvas = new Canvas(resized);
+//        canvasBitmap = resized;
+    }
+
     public void setErase(boolean isErase) {
         erase = isErase;
-        if(erase) drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        else drawPaint.setXfermode(null);
+        if (erase) {
+            drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        }
+        else {
+            drawPaint.setXfermode(null);
+        }
     }
 
     public void setupDrawing() {
@@ -71,14 +88,22 @@ public class DrawingView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-//        canvasBitmap = BitmapFactory.decodeFile(MainActivity.mCurrentPhotoPath);
-        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        BitmapFactory.Options op = new BitmapFactory.Options();
+        op.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        canvasBitmap = BitmapFactory.decodeFile(this.imagePath, op);
+        canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, w, h, true);
+//        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        canvasBitmapCopy = canvasBitmap.copy(Bitmap.Config.ARGB_8888, true);
         drawCanvas = new Canvas(canvasBitmap);
+        width = w;
+        height = h;
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
 //        canvas.drawBitmap(background, 0, 0, canvasPaint);
+
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
     }
