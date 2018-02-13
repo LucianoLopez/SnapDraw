@@ -146,13 +146,13 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
         }
     }
     public void paintClicked(View view) {
-        if (!gotDimensions) {
-            int width = drawView.getNewWidth();
-            int height = drawView.getNewHeight();
-            Bitmap new1 = BitmapFactory.decodeFile(imagePath);
-            background.setImageBitmap(Bitmap.createScaledBitmap(new1, width, height, true));
-            gotDimensions = true;
-        }
+//        if (!gotDimensions) {
+//            int width = drawView.getNewWidth();
+//            int height = drawView.getNewHeight();
+//            Bitmap new1 = BitmapFactory.decodeFile(imagePath);
+//            background.setImageBitmap(Bitmap.createScaledBitmap(new1, width, height, true));
+//            gotDimensions = true;
+//        }
         drawView.setErase(false);
         drawView.setBrushSize(drawView.getLastBrushSize());
         if (view != currPaint) {
