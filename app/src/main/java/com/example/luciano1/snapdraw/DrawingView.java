@@ -6,15 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.TypedValue;
@@ -34,19 +29,25 @@ public class DrawingView extends View {
     private boolean erase = false;
     int width;
     int height;
+
     String imagePath;
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupDrawing();
+        this.setLayerType(LAYER_TYPE_HARDWARE,null);
     }
 
+    public void clearCanvas(){
+        canvasBitmap = BitmapFactory.decodeFile(this.imagePath);
+        canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, width, height, true);
+        drawCanvas = new Canvas(canvasBitmap);
+        invalidate();
+    }
+
+
     public void setCanvas(String imagePath) {
-        Bitmap new1 = BitmapFactory.decodeFile(imagePath);
-        Bitmap resized = Bitmap.createScaledBitmap(new1, 1054, 1469, true);
         this.imagePath = imagePath;
-//        drawCanvas = new Canvas(resized);
-//        canvasBitmap = resized;
     }
 
     public void setErase(boolean isErase) {
@@ -73,7 +74,12 @@ public class DrawingView extends View {
         canvasPaint = new Paint(Paint.DITHER_FLAG);
 
     }
-
+    public int getNewWidth() {
+        return width;
+    }
+    public int getNewHeight() {
+        return height;
+    }
     public void setBrushSize(float newSize) {
         float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, getResources().getDisplayMetrics());
         brushSize = pixelAmount;
@@ -85,25 +91,24 @@ public class DrawingView extends View {
     public float getLastBrushSize() {
         return lastBrushSize;
     }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        BitmapFactory.Options op = new BitmapFactory.Options();
-        op.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        canvasBitmap = BitmapFactory.decodeFile(this.imagePath, op);
+        canvasBitmap = BitmapFactory.decodeFile(this.imagePath);
         canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, w, h, true);
-//        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        canvasBitmapCopy = canvasBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        drawCanvas = new Canvas(canvasBitmap);
         width = w;
         height = h;
+//        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+//        canvasBitmapCopy = canvasBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        drawCanvas = new Canvas(canvasBitmap);
     }
+
+
 
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        canvas.drawBitmap(background, 0, 0, canvasPaint);
-
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
     }

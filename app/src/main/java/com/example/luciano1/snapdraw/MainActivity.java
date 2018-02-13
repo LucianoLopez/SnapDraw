@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 //            int width = size.x;
 //            int height = size.y;
 //            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth(), imageBitmap.getHeight(), true);
-            mImageView.setImageBitmap(imageBitmap);
+//            mImageView.setImageBitmap(imageBitmap);
             startDrawing();
 
         }

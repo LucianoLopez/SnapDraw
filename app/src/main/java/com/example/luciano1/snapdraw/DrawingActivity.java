@@ -2,11 +2,14 @@ package com.example.luciano1.snapdraw;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import java.util.UUID;
 import android.provider.MediaStore;
@@ -23,9 +26,12 @@ import android.widget.Toast;
 
 public class DrawingActivity extends Activity implements View.OnClickListener {
     private DrawingView drawView;
+    private ImageView background;
     private ImageButton currPaint, drawBtn, eraseBtn;
     private float smallBrush, mediumBrush, largeBrush;
     String imagePath;
+    boolean gotDimensions = false;
+    Button clearButton;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,8 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
         Intent intent = getIntent();
         imagePath = intent.getStringExtra("filePath");
         drawView = (DrawingView)findViewById(R.id.drawing);
+        background = (ImageView) findViewById(R.id.background);
+        background.setImageBitmap(BitmapFactory.decodeFile(imagePath));
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
         currPaint = (ImageButton) paintLayout.getChildAt(0);
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
@@ -46,10 +54,17 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
         eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
         eraseBtn.setOnClickListener(this);
         drawView.setCanvas(imagePath);
-        drawView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+
+
+//        drawView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
 
 
     }
+
+    public void onClearButton(View view) {
+        drawView.clearCanvas();
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -125,6 +140,13 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
         }
     }
     public void paintClicked(View view) {
+        if (!gotDimensions) {
+            int width = drawView.getNewWidth();
+            int height = drawView.getNewHeight();
+            Bitmap new1 = BitmapFactory.decodeFile(imagePath);
+            background.setImageBitmap(Bitmap.createScaledBitmap(new1, width, height, true));
+            gotDimensions = true;
+        }
         drawView.setErase(false);
         drawView.setBrushSize(drawView.getLastBrushSize());
         if (view != currPaint) {

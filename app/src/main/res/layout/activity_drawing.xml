@@ -7,36 +7,67 @@
     android:background="#FFCCCCCC"
     android:orientation="vertical"
     tools:context="com.example.luciano1.snapdraw.DrawingActivity" >
+
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="259dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="100dp"
+            android:layout_height="fill_parent"
+            android:onClick="onClearButton"
+            android:text="Clear Drawing" />
 
         <ImageButton
             android:id="@+id/draw_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="fill_parent"
             android:contentDescription="@string/start_new"
-            android:src="@drawable/brush"/>
+            android:src="@drawable/brush" />
+
         <ImageButton
             android:id="@+id/erase_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="75dp"
             android:layout_height="fill_parent"
             android:contentDescription="@string/erase"
-            android:src="@drawable/eraser"/>
+            android:src="@drawable/eraser" />
+
     </LinearLayout>
 
-    <com.example.luciano1.snapdraw.DrawingView
-        android:id="@+id/drawing"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="3dp"
-        android:layout_weight="1"
-        android:background="#FFFFFFFF" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="fill_parent"
+            android:layout_height="400dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/image" />
+
+
+        <com.example.luciano1.snapdraw.DrawingView
+            android:id="@+id/drawing"
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="center"
+            android:background="#FFFFFFFF" />
+
+    </FrameLayout>
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -174,5 +205,7 @@
                 android:tag="#FF000000" />
         </LinearLayout>
     </LinearLayout>
+
+
 
 </LinearLayout>
