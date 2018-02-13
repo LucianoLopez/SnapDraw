@@ -1,31 +1,17 @@
 package com.example.luciano1.snapdraw;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -34,20 +20,15 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     ImageView mImageView;
     Button button;
-    private Path drawPath;
-    private Paint drawPaint, canvasPaint;
-    private int paintColor;
-    private Bitmap canvasBitmap;
     String mCurrentPhotoPath;
-    boolean finished = false;
     View globalView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mImageView = findViewById(R.id.image_view);
         button = findViewById(R.id.button);
-//        button.setOnClickListener(new View );
     }
 
     public void onTakePicture(View view) {
@@ -66,15 +47,17 @@ public class MainActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this, "com.example.luciano1.snapdraw.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//                Intent myIntent = new Intent(view.getContext(), DrawingActivity.class);
-//                startActivity(myIntent);
             }
         }
 
 
     }
-    public void startDrawing() {
 
+    public void onCanvasCreate(View view) {
+        Intent myIntent = new Intent(view.getContext(), DrawingActivity.class);
+        startActivity(myIntent);
+    }
+    public void startDrawing() {
         Intent myIntent = new Intent(globalView.getContext(), DrawingActivity.class);
         String imagePath = mCurrentPhotoPath;
         myIntent.putExtra("filePath", imagePath);
@@ -109,21 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //set path
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-             Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-
-//             DrawingView.background = canvasBitmap;
-//            canvasBitmap = imageBitmap;
-//            imageBitmap.getHeight();
-//            imageBitmap.getWidth();
-//            Display parent = getWindowManager().getDefaultDisplay();
-//            Point size = new Point();
-//            int width = size.x;
-//            int height = size.y;
-//            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageBitmap.getWidth(), imageBitmap.getHeight(), true);
-//            mImageView.setImageBitmap(imageBitmap);
+//            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
             startDrawing();
 
         }

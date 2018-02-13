@@ -36,12 +36,18 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
+        drawView = (DrawingView)findViewById(R.id.drawing);
         //TRYING TO GET INTENT
         Intent intent = getIntent();
-        imagePath = intent.getStringExtra("filePath");
-        drawView = (DrawingView)findViewById(R.id.drawing);
-        background = (ImageView) findViewById(R.id.background);
-        background.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+        if (intent.getStringExtra("filePath") != null) {
+            imagePath = intent.getStringExtra("filePath");
+            drawView.setCanvas(imagePath);
+            background = (ImageView) findViewById(R.id.background);
+            background.setImageBitmap(BitmapFactory.decodeFile(imagePath));
+        } else {
+            drawView.setCanvas("empty");
+        }
+
         LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
         currPaint = (ImageButton) paintLayout.getChildAt(0);
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
@@ -53,7 +59,7 @@ public class DrawingActivity extends Activity implements View.OnClickListener {
         drawView.setBrushSize(mediumBrush);
         eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
         eraseBtn.setOnClickListener(this);
-        drawView.setCanvas(imagePath);
+
 
 
 //        drawView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);

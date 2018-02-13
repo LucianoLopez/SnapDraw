@@ -24,11 +24,11 @@ public class DrawingView extends View {
     private int paintColor = 0xFF660000;
     private Canvas drawCanvas;
     private Bitmap canvasBitmap;
-    private Bitmap canvasBitmapCopy;
     private float brushSize, lastBrushSize;
     private boolean erase = false;
     int width;
     int height;
+    private boolean clearCanvas = false;
 
     String imagePath;
 
@@ -39,15 +39,24 @@ public class DrawingView extends View {
     }
 
     public void clearCanvas(){
-        canvasBitmap = BitmapFactory.decodeFile(this.imagePath);
-        canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, width, height, true);
-        drawCanvas = new Canvas(canvasBitmap);
+        if (clearCanvas) {
+            canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            drawCanvas = new Canvas(canvasBitmap);
+        } else {
+            canvasBitmap = BitmapFactory.decodeFile(this.imagePath);
+            canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, width, height, true);
+            drawCanvas = new Canvas(canvasBitmap);
+        }
         invalidate();
     }
 
 
     public void setCanvas(String imagePath) {
-        this.imagePath = imagePath;
+        if (imagePath.equals("empty")) {
+            clearCanvas = true;
+        } else {
+            this.imagePath = imagePath;
+        }
     }
 
     public void setErase(boolean isErase) {
@@ -95,12 +104,15 @@ public class DrawingView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        canvasBitmap = BitmapFactory.decodeFile(this.imagePath);
-        canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, w, h, true);
+
         width = w;
         height = h;
-//        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-//        canvasBitmapCopy = canvasBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        if (clearCanvas) {
+            canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        } else {
+            canvasBitmap = BitmapFactory.decodeFile(this.imagePath);
+            canvasBitmap = Bitmap.createScaledBitmap(canvasBitmap, w, h, true);
+        }
         drawCanvas = new Canvas(canvasBitmap);
     }
 
